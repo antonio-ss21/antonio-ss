@@ -2,39 +2,116 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Inventario Completo</title>
+  <title>Inventario Móvil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 👈 Importante para móviles -->
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h1 { color: #333; }
-    input, button, select { padding: 5px; margin: 5px 0; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 10px; 
+      background: #f9f9f9;
+    }
+    h1 { 
+      color: #333; 
+      text-align: center; 
+    }
+    .formulario {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td { 
+      padding: 12px; 
+      border-bottom: 1px solid #ddd; 
+      text-align: left; 
+      font-size: 14px;
+    }
     th { background-color: #f2f2f2; }
-    button.eliminar { background-color: #ff4d4d; color: white; border: none; cursor: pointer; padding: 3px 6px; }
+    button.eliminar {
+      background-color: #ff4d4d; 
+      color: white; 
+      border: none; 
+      padding: 6px 10px; 
+      border-radius: 5px;
+      font-size: 12px;
+    }
     button.eliminar:hover { opacity: 0.8; }
+
+    /* 👇 Ajustes responsivos */
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead { display: none; }
+      tr { 
+        margin-bottom: 15px; 
+        background: white; 
+        border-radius: 8px; 
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        padding: 10px;
+      }
+      td { 
+        border: none; 
+        display: flex; 
+        justify-content: space-between; 
+        padding: 8px 5px;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #333;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <h1>Inventario Completo</h1>
+  <h1>📦 Inventario</h1>
 
-  <label>Producto:</label><br>
-  <input type="text" id="nombreProducto" placeholder="Nombre del producto"><br>
+  <div class="formulario">
+    <label>Producto:</label>
+    <input type="text" id="nombreProducto" placeholder="Nombre del producto">
 
-  <label>Cantidad:</label><br>
-  <input type="number" id="cantidadProducto" placeholder="Cantidad"><br>
+    <label>Cantidad:</label>
+    <input type="number" id="cantidadProducto" placeholder="Cantidad">
 
-  <label>Categoría:</label><br>
-  <input list="categorias" id="categoriaProducto" placeholder="Elige o escribe una categoría">
-  <datalist id="categorias">
-    <option value="Motor">
-    <option value="Suspensión y frenos">
-    <option value="Carrocería">
-    <option value="Interior">
-    <option value="Otros">
-  </datalist><br>
+    <label>Categoría:</label>
+    <input list="categorias" id="categoriaProducto" placeholder="Elige o escribe una categoría">
+    <datalist id="categorias">
+      <option value="Frutas">
+      <option value="Lácteos">
+      <option value="Bebidas">
+      <option value="Otros">
+    </datalist>
 
-  <button onclick="agregarProducto()">Agregar al Inventario</button>
+    <button onclick="agregarProducto()">Agregar al Inventario</button>
+  </div>
 
   <table id="tablaInventario">
     <thead>
@@ -51,7 +128,6 @@
   </table>
 
   <script>
-    // Cargar inventario desde localStorage o iniciar vacío
     let inventario = JSON.parse(localStorage.getItem('inventario')) || [];
 
     function guardarInventario() {
@@ -89,16 +165,15 @@
       inventario.forEach((item, index) => {
         const fila = document.createElement('tr');
         fila.innerHTML = `
-          <td>${item.nombre}</td>
-          <td>${item.cantidad}</td>
-          <td>${item.categoria}</td>
-          <td><button class="eliminar" onclick="eliminarProducto(${index})">Eliminar</button></td>
+          <td data-label="Producto">${item.nombre}</td>
+          <td data-label="Cantidad">${item.cantidad}</td>
+          <td data-label="Categoría">${item.categoria}</td>
+          <td data-label="Acción"><button class="eliminar" onclick="eliminarProducto(${index})">Eliminar</button></td>
         `;
         tbody.appendChild(fila);
       });
     }
 
-    // Inicializar tabla al cargar la página
     actualizarTabla();
   </script>
 
