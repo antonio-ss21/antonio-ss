@@ -1,10 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Mi Página Web</title>
+  <meta charset="UTF-8">
+  <title>Inventario Simple</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    input, button { padding: 5px; margin: 5px 0; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+  </style>
 </head>
 <body>
-  <h1>¡Hola, mundo!</h1>
-  <p>Esta es mi primera página web en GitHub Pages.</p>
+
+  <h1>Inventario Simple</h1>
+
+  <label>Producto:</label><br>
+  <input type="text" id="nombreProducto" placeholder="Nombre del producto"><br>
+  
+  <label>Cantidad:</label><br>
+  <input type="number" id="cantidadProducto" placeholder="Cantidad"><br>
+  
+  <button onclick="agregarProducto()">Agregar al Inventario</button>
+
+  <table id="tablaInventario">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Productos se agregan aquí -->
+    </tbody>
+  </table>
+
+  <script>
+    const inventario = [];
+
+    function agregarProducto() {
+      const nombre = document.getElementById('nombreProducto').value.trim();
+      const cantidad = parseInt(document.getElementById('cantidadProducto').value);
+
+      if(!nombre || isNaN(cantidad) || cantidad <= 0) {
+        alert("Ingresa un nombre y una cantidad válida.");
+        return;
+      }
+
+      inventario.push({nombre, cantidad});
+      actualizarTabla();
+
+      document.getElementById('nombreProducto').value = '';
+      document.getElementById('cantidadProducto').value = '';
+    }
+
+    function actualizarTabla() {
+      const tbody = document.getElementById('tablaInventario').getElementsByTagName('tbody')[0];
+      tbody.innerHTML = '';
+      inventario.forEach(item => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `<td>${item.nombre}</td><td>${item.cantidad}</td>`;
+        tbody.appendChild(fila);
+      });
+    }
+  </script>
+
 </body>
 </html>
