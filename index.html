@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Inventario Simple</title>
+  <title>Inventario</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h1 { color: #333; }
@@ -14,13 +14,23 @@
 </head>
 <body>
 
-  <h1>Inventario Simple</h1>
+  <h1>Inventario</h1>
 
   <label>Producto:</label><br>
   <input type="text" id="nombreProducto" placeholder="Nombre del producto"><br>
   
   <label>Cantidad:</label><br>
   <input type="number" id="cantidadProducto" placeholder="Cantidad"><br>
+
+  <label>Categoría:</label><br>
+<input list="categorias" id="categoriaProducto" placeholder="Elige o añade una categoría">
+<datalist id="categorias">
+  <option value="Motor">Motor</option>
+  <option value="Suspensión y frenos">Suspensión y frenos</option>
+  <option value="Carrocería">Carrocería</option>
+  <option value="Interior">Interior</option>
+  <option value="Otros">Otros</option>
+</select>
   
   <button onclick="agregarProducto()">Agregar al Inventario</button>
 
@@ -29,6 +39,7 @@
       <tr>
         <th>Producto</th>
         <th>Cantidad</th>
+        <th>Categoría</th>
       </tr>
     </thead>
     <tbody>
@@ -42,13 +53,14 @@
     function agregarProducto() {
       const nombre = document.getElementById('nombreProducto').value.trim();
       const cantidad = parseInt(document.getElementById('cantidadProducto').value);
+      const categoria = document.getElementById('categoriaProducto').value;
 
       if(!nombre || isNaN(cantidad) || cantidad <= 0) {
         alert("Ingresa un nombre y una cantidad válida.");
         return;
       }
 
-      inventario.push({nombre, cantidad});
+      inventario.push({nombre, cantidad, categoria});
       actualizarTabla();
 
       document.getElementById('nombreProducto').value = '';
@@ -60,7 +72,7 @@
       tbody.innerHTML = '';
       inventario.forEach(item => {
         const fila = document.createElement('tr');
-        fila.innerHTML = `<td>${item.nombre}</td><td>${item.cantidad}</td>`;
+        fila.innerHTML = `<td>${item.nombre}</td><td>${item.cantidad}</td><td>${item.categoria}</td>`;
         tbody.appendChild(fila);
       });
     }
