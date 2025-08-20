@@ -121,7 +121,7 @@
         <th>Producto</th>
         <th>Cantidad</th>
         <th>Categoría</th>
-        <th>-</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -174,7 +174,7 @@
           <td data-label="Producto">${item.nombre}</td>
           <td data-label="Cantidad">${item.cantidad}</td>
           <td data-label="Categoría">${item.categoria}</td>
-          <td data-label="-"><button class="eliminar" onclick="eliminarProducto(${index})">Eliminar</button></td>
+          <td data-label=""><button class="eliminar" onclick="eliminarProducto(${index})">Eliminar</button></td>
         `;
         tbody.appendChild(fila);
       });
