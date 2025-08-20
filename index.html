@@ -2,36 +2,38 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Inventario</title>
+  <title>Inventario Completo</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h1 { color: #333; }
-    input, button { padding: 5px; margin: 5px 0; }
+    input, button, select { padding: 5px; margin: 5px 0; }
     table { border-collapse: collapse; width: 100%; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     th { background-color: #f2f2f2; }
+    button.eliminar { background-color: #ff4d4d; color: white; border: none; cursor: pointer; padding: 3px 6px; }
+    button.eliminar:hover { opacity: 0.8; }
   </style>
 </head>
 <body>
 
-  <h1>Inventario</h1>
+  <h1>Inventario Completo</h1>
 
   <label>Producto:</label><br>
   <input type="text" id="nombreProducto" placeholder="Nombre del producto"><br>
-  
+
   <label>Cantidad:</label><br>
   <input type="number" id="cantidadProducto" placeholder="Cantidad"><br>
 
   <label>Categoría:</label><br>
-<input list="categorias" id="categoriaProducto" placeholder="Elige o añade una categoría">
-<datalist id="categorias">
-  <option value="Motor">Motor</option>
-  <option value="Suspensión y frenos">Suspensión y frenos</option>
-  <option value="Carrocería">Carrocería</option>
-  <option value="Interior">Interior</option>
-  <option value="Otros">Otros</option>
-</select>
-  
+  <input list="categorias" id="categoriaProducto" placeholder="Elige o escribe una categoría">
+  <datalist id="categorias">
+    <option value="Motor">
+    <option value="Suspensión y frenos">
+    <option value="Carrocería">
+    <option value="Interior">
+    <option value="Otros">
+  </datalist><br>
+
   <button onclick="agregarProducto()">Agregar al Inventario</button>
 
   <table id="tablaInventario">
@@ -40,6 +42,7 @@
         <th>Producto</th>
         <th>Cantidad</th>
         <th>Categoría</th>
+        <th>Acción</th>
       </tr>
     </thead>
     <tbody>
@@ -48,34 +51,55 @@
   </table>
 
   <script>
-    const inventario = [];
+    // Cargar inventario desde localStorage o iniciar vacío
+    let inventario = JSON.parse(localStorage.getItem('inventario')) || [];
+
+    function guardarInventario() {
+      localStorage.setItem('inventario', JSON.stringify(inventario));
+    }
 
     function agregarProducto() {
       const nombre = document.getElementById('nombreProducto').value.trim();
       const cantidad = parseInt(document.getElementById('cantidadProducto').value);
-      const categoria = document.getElementById('categoriaProducto').value;
+      const categoria = document.getElementById('categoriaProducto').value.trim();
 
-      if(!nombre || isNaN(cantidad) || cantidad <= 0) {
-        alert("Ingresa un nombre y una cantidad válida.");
+      if(!nombre || isNaN(cantidad) || cantidad <= 0 || !categoria) {
+        alert("Ingresa un nombre, cantidad y categoría válidos.");
         return;
       }
 
       inventario.push({nombre, cantidad, categoria});
+      guardarInventario();
       actualizarTabla();
 
       document.getElementById('nombreProducto').value = '';
       document.getElementById('cantidadProducto').value = '';
+      document.getElementById('categoriaProducto').value = '';
+    }
+
+    function eliminarProducto(index) {
+      inventario.splice(index, 1);
+      guardarInventario();
+      actualizarTabla();
     }
 
     function actualizarTabla() {
       const tbody = document.getElementById('tablaInventario').getElementsByTagName('tbody')[0];
       tbody.innerHTML = '';
-      inventario.forEach(item => {
+      inventario.forEach((item, index) => {
         const fila = document.createElement('tr');
-        fila.innerHTML = `<td>${item.nombre}</td><td>${item.cantidad}</td><td>${item.categoria}</td>`;
+        fila.innerHTML = `
+          <td>${item.nombre}</td>
+          <td>${item.cantidad}</td>
+          <td>${item.categoria}</td>
+          <td><button class="eliminar" onclick="eliminarProducto(${index})">Eliminar</button></td>
+        `;
         tbody.appendChild(fila);
       });
     }
+
+    // Inicializar tabla al cargar la página
+    actualizarTabla();
   </script>
 
 </body>
